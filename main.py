@@ -5,6 +5,7 @@ app = Flask(__name__)
 app.config['DEBUG'] = True
 app.config['SQLALCHEMY_DATABASE_URI'] = 'mysql+pymysql://get-it-done:dafJdf0125@localhost:8889/get-it-done'
 app.config['SQLALCHEMY_ECHO'] = True
+
 db = SQLAlchemy(app)
 
 class Task(db.Model):
@@ -15,6 +16,36 @@ class Task(db.Model):
     def __init__(self, name):
         self.name = name
         self.completed = False
+
+
+class User(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True)
+    password = db.Column(db.String(120))
+
+    def __init__(self, email, password):
+        self.email = email
+        self.password = password
+
+
+@app.route('/login', methods=['POST', 'GET'])
+def login():
+    return render_template('login.html')
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = Use.query.filter_by(email=email).first()
+        if user and user.password == password:
+            # TODO - "remeber" that the user has logged in
+            return redirect('/')
+        else:
+            # TODO - explain why login failed
+            return '<h1>Error!</h1>'
+
+
+@app.route('/register', methods=['POST', 'GET'])
+def register():
+    return render_template('register.html')
 
 
 @app.route('/', methods=['POST', 'GET'])
