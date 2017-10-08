@@ -34,7 +34,7 @@ def login():
     if request.method == 'POST':
         email = request.form['email']
         password = request.form['password']
-        user = Use.query.filter_by(email=email).first()
+        user = User.query.filter_by(email=email).first()
         if user and user.password == password:
             # TODO - "remeber" that the user has logged in
             return redirect('/')
